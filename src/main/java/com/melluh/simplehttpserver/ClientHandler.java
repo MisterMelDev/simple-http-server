@@ -11,8 +11,14 @@ public class ClientHandler {
 	private List<ServerClient> clients = Collections.synchronizedList(new ArrayList<>());
 	private ExecutorService executor = Executors.newCachedThreadPool();
 	
+	/**
+	 * Returns a list of all server clients with an active connection.
+	 * 
+	 * @return an immutable list of active clients
+	 * @see {@link ServerClient}
+	 */
 	public List<ServerClient> getClients() {
-		return clients;
+		return Collections.unmodifiableList(clients);
 	}
 	
 	protected void acceptClient(ServerClient client) {
