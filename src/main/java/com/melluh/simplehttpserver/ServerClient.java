@@ -73,7 +73,7 @@ public class ServerClient implements Runnable {
 			}
 			
 			try {
-				this.request = new Request(method, statusParams[1], statusParams[2]);
+				this.request = new Request(server, method, statusParams[1], statusParams[2]);
 			} catch (ParseException ex) {
 				this.sendResponse(ex.createResponse());
 				return;
@@ -131,6 +131,7 @@ public class ServerClient implements Runnable {
 		StringBuilder header = new StringBuilder();
 		header.append("HTTP/1.1 ").append(response.getStatus().toString()).append("\r\n");
 		response.getHeaders().forEach((name, value) -> header.append(name).append(": ").append(value).append("\r\n"));
+		response.getCookies().forEach(cookie -> header.append(HTTPHeader.SET_COOKIE).append(": ").append(cookie.getHeaderValue()).append("\r\n"));
 		header.append("\r\n");
 		out.write(header.toString().getBytes());
 		

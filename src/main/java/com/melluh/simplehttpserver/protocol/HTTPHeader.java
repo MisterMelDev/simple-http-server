@@ -9,5 +9,7 @@ public class HTTPHeader {
 	public static final String SERVER = "server";
 	public static final String DATE = "date";
 	public static final String CONNECTION = "connection";
+	public static final String COOKIE = "cookie";
+	public static final String SET_COOKIE = "set-cookie";
 	
 }

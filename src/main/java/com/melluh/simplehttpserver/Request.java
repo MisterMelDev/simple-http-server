@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.melluh.simplehttpserver.ServerClient.ParseException;
+import com.melluh.simplehttpserver.protocol.HTTPHeader;
 import com.melluh.simplehttpserver.protocol.Method;
 import com.melluh.simplehttpserver.protocol.Status;
 
@@ -13,14 +14,18 @@ public class Request {
 
 	private static final int MAX_URI_LENGTH = 2048;
 	
+	private HTTPServer server;
+	
 	private Method method;
 	private String location;
 	private String protocolVersion;
 	
 	private Map<String, String> headers = new HashMap<>();
 	private Map<String, String> uriParams = new HashMap<>();
+	private Map<String, String> cookies = new HashMap<>();
 	
-	protected Request(Method method, String uri, String protocolVersion) throws ParseException {
+	protected Request(HTTPServer server, Method method, String uri, String protocolVersion) throws ParseException {
+		this.server = server;
 		this.method = method;
 		this.protocolVersion = protocolVersion;
 		this.parseUri(uri);
@@ -55,6 +60,20 @@ public class Request {
 	
 	protected void addHeader(String key, String value) {
 		headers.put(key.toLowerCase(), value);
+		
+		if(key.equalsIgnoreCase(HTTPHeader.COOKIE) && server.isParseCookies()) {
+			this.parseCookieHeader(value);
+		}
+	}
+	
+	private void parseCookieHeader(String header) {
+		for(String part : header.split("; ")) {
+			int equalsIndex = part.indexOf('=');
+			if(equalsIndex == -1)
+				break;
+			
+			cookies.put(part.substring(0, equalsIndex), part.substring(equalsIndex + 1));
+		}
 	}
 	
 	/**
@@ -91,7 +110,7 @@ public class Request {
 	 * The name is case-insensitive.
 	 * 
 	 * @param name name of the header
-	 * @return value of the header, or null if it doesn't exist
+	 * @return value of the header, or null if it isn't present
 	 */
 	public String getHeader(String name) {
 		return headers.get(name.toLowerCase());
@@ -103,10 +122,26 @@ public class Request {
 	 * The name is case-insensitive.
 	 * 
 	 * @param name name of the uri param
-	 * @return value of the uri param, or null if it doesn't exist
+	 * @return value of the uri param, or null if it isn't present
 	 */
 	public String getUriParam(String name) {
 		return uriParams.get(name.toLowerCase());
+	}
+	
+	/**
+	 * Returns the value for the specified cookie.
+	 * If the cookie is not present on this request, this returns null.
+	 * The name is <i>case-sensitive</i>.
+	 * 
+	 * <br><br>
+	 * <b>This will only work if cookie parsing is enabled.</b>
+	 * 
+	 * @param name name of the cookie
+	 * @return value of the cookie, or null if it isn't present
+	 * @see {@link HTTPServer#isParseCookies()}
+	 */
+	public String getCookie(String name) {
+		return cookies.get(name);
 	}
 	
 	/**
@@ -132,6 +167,21 @@ public class Request {
 	}
 	
 	/**
+	 * Checks if this request contains the specified cookie.
+	 * Cookie names are <i>case-sensitive</i>.
+	 * 
+	 * <br><br>
+	 * <b>This will only work if cookie parsing is enabled.</b>
+	 * 
+	 * @param name name of the cookie
+	 * @return whether this request contains it
+	 * @see {@link HTTPServer#isParseCookies()}
+	 */
+	public boolean hasCookie(String name) {
+		return cookies.containsKey(name);
+	}
+	
+	/**
 	 * Returns a set of all headers on this request.
 	 * All names are in lowercase.
 	 * 
@@ -149,6 +199,20 @@ public class Request {
 	 */
 	public Set<String> getUriParams() {
 		return Collections.unmodifiableSet(uriParams.keySet());
+	}
+	
+	/**
+	 * Returns a set of cookies on this request.
+	 * Cookie names are <i>case-sensitive</i>.
+	 * 
+	 * <br><br>
+	 * <b>This will only work if cookie parsing is enabled.</b>
+	 * 
+	 * @return an immutable set of cookie names
+	 * @see {@link HTTPServer#isParseCookies()}
+	 */
+	public Set<String> getCookies() {
+		return Collections.unmodifiableSet(cookies.keySet());
 	}
 	
 }

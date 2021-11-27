@@ -22,6 +22,8 @@ public class HTTPServer {
 	private ClientHandler clientHandler;
 	private ServerSocket socket;
 	
+	private boolean parseCookies = true;
+	
 	/**
 	 * Creates a new HTTP server, running on the
 	 * specified port.
@@ -44,6 +46,17 @@ public class HTTPServer {
 		Objects.requireNonNull(uri, "uri is missing");
 		Objects.requireNonNull(route, "route is missing");
 		routes.put(uri.toLowerCase(), route);
+		return this;
+	}
+	
+	/**
+	 * Enables or disables parsing the Cookie header in requests.
+	 * 
+	 * @param parseCookies whether to parse cookies
+	 * @return a reference to this, so the API can be used fluently
+	 */
+	public HTTPServer parseCookies(boolean parseCookies) {
+		this.parseCookies = parseCookies;
 		return this;
 	}
 	
@@ -102,6 +115,15 @@ public class HTTPServer {
 	 */
 	public int getPort() {
 		return port;
+	}
+	
+	/**
+	 * Returns whether cookie parsing is enabled.
+	 * 
+	 * @return true if cookie parsing is enabled
+	 */
+	public boolean isParseCookies() {
+		return parseCookies;
 	}
 	
 }

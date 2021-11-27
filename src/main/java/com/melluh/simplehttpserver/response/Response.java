@@ -1,8 +1,10 @@
 package com.melluh.simplehttpserver.response;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import com.melluh.simplehttpserver.protocol.MimeType;
 import com.melluh.simplehttpserver.protocol.Status;
@@ -11,6 +13,7 @@ public class Response {
 
 	private Status status;
 	private Map<String, String> headers = new HashMap<>();
+	private Set<Cookie> cookies = new HashSet<>();
 	private ResponseBody body;
 	
 	/**
@@ -104,12 +107,28 @@ public class Response {
 		return this;
 	}
 	
+	/**
+	 * Adds a cookie to the response. This can be called multiple times to add multiple cookies.
+	 * 
+	 * @param cookie cookie to add
+	 * @return a reference to this, so the API can be used fluently
+	 */
+	public Response cookie(Cookie cookie) {
+		Objects.requireNonNull(cookie, "cookie is missing");
+		cookies.add(cookie);
+		return this;
+	}
+	
 	public Status getStatus() {
 		return status;
 	}
 	
 	public Map<String, String> getHeaders() {
 		return headers;
+	}
+	
+	public Set<Cookie> getCookies() {
+		return cookies;
 	}
 	
 	public boolean hasBody() {
