@@ -1,8 +1,8 @@
 package com.melluh.simplehttpserver.protocol;
 
-public class HTTPHeader {
+public class HttpHeader {
 
-	private HTTPHeader() {}
+	private HttpHeader() {}
 	
 	public static final String CONTENT_LENGTH = "content-length";
 	public static final String MIME_TYPE = "mime-type";

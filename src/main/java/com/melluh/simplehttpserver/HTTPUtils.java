@@ -17,9 +17,9 @@ import com.melluh.simplehttpserver.protocol.Status;
 import com.melluh.simplehttpserver.response.Response;
 import com.melluh.simplehttpserver.response.StreamResponseBody;
 
-public class HTTPUtils {
+public class HttpUtils {
 
-	private HTTPUtils() {}
+	private HttpUtils() {}
 	
 	public static String decodePercent(String str) {
 		return URLDecoder.decode(str, StandardCharsets.UTF_8);
@@ -42,7 +42,7 @@ public class HTTPUtils {
 		try {
 			closeable.close();
 		} catch (IOException ex) {
-			HTTPServer.LOGGER.log(Level.SEVERE, "Failed to close", ex);
+			HttpServer.LOGGER.log(Level.SEVERE, "Failed to close", ex);
 		}
 	}
 	

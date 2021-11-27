@@ -9,7 +9,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.logging.Level;
 
-import com.melluh.simplehttpserver.protocol.HTTPHeader;
+import com.melluh.simplehttpserver.protocol.HttpHeader;
 import com.melluh.simplehttpserver.protocol.Method;
 import com.melluh.simplehttpserver.protocol.MimeType;
 import com.melluh.simplehttpserver.protocol.Status;
@@ -20,13 +20,13 @@ public class ServerClient implements Runnable {
 	private static final String SERVER_HEADER = "simple-http-server";
 	private static final int HEADER_BUFFER_SIZE = 8192;
 	
-	private HTTPServer server;
+	private HttpServer server;
 	private Socket socket;
 	private InputStream in;
 	
 	private Request request;
 	
-	public ServerClient(HTTPServer server, Socket socket, InputStream in) {
+	public ServerClient(HttpServer server, Socket socket, InputStream in) {
 		this.server = server;
 		this.socket = socket;
 		this.in = in;
@@ -105,8 +105,8 @@ public class ServerClient implements Runnable {
 			reader.close();
 			
 			// read body, if it's present
-			if(request.hasHeader(HTTPHeader.CONTENT_LENGTH)) {
-				int bodyLength = HTTPUtils.safeParseInt(request.getHeader(HTTPHeader.CONTENT_LENGTH));
+			if(request.hasHeader(HttpHeader.CONTENT_LENGTH)) {
+				int bodyLength = HttpUtils.safeParseInt(request.getHeader(HttpHeader.CONTENT_LENGTH));
 				if(bodyLength > 0) {
 					byte[] body = new byte[bodyLength];
 					int read, totalRead = 0;
@@ -125,7 +125,7 @@ public class ServerClient implements Runnable {
 			
 			this.sendResponse(server.handleRequest(request));
 		} catch (IOException ex) {
-			HTTPServer.LOGGER.log(Level.SEVERE, "Error handling client connection", ex);
+			HttpServer.LOGGER.log(Level.SEVERE, "Error handling client connection", ex);
 		} finally {
 			server.getClientHandler().closed(this);
 		}
@@ -138,18 +138,18 @@ public class ServerClient implements Runnable {
 		}
 		
 		if(sendBody) {
-			response.optHeader(HTTPHeader.CONTENT_LENGTH, String.valueOf(response.getBody().getLength()));
+			response.optHeader(HttpHeader.CONTENT_LENGTH, String.valueOf(response.getBody().getLength()));
 		}
 		
-		response.optHeader(HTTPHeader.SERVER, SERVER_HEADER);
-		response.header(HTTPHeader.CONNECTION, "close"); // Implementation does not support keep-alive
+		response.optHeader(HttpHeader.SERVER, SERVER_HEADER);
+		response.header(HttpHeader.CONNECTION, "close"); // Implementation does not support keep-alive
 		
 		OutputStream out = socket.getOutputStream();
 		
 		StringBuilder header = new StringBuilder();
 		header.append("HTTP/1.1 ").append(response.getStatus().toString()).append("\r\n");
 		response.getHeaders().forEach((name, value) -> header.append(name).append(": ").append(value).append("\r\n"));
-		response.getCookies().forEach(cookie -> header.append(HTTPHeader.SET_COOKIE).append(": ").append(cookie.getHeaderValue()).append("\r\n"));
+		response.getCookies().forEach(cookie -> header.append(HttpHeader.SET_COOKIE).append(": ").append(cookie.getHeaderValue()).append("\r\n"));
 		header.append("\r\n");
 		out.write(header.toString().getBytes());
 		
@@ -157,8 +157,8 @@ public class ServerClient implements Runnable {
 			response.getBody().write(out);
 		}
 		
-		HTTPUtils.close(out);
-		HTTPUtils.close(socket);
+		HttpUtils.close(out);
+		HttpUtils.close(socket);
 	}
 	
 	public static class ParseException extends Exception {

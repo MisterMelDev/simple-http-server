@@ -12,7 +12,7 @@ import com.melluh.simplehttpserver.protocol.MimeType;
 import com.melluh.simplehttpserver.protocol.Status;
 import com.melluh.simplehttpserver.response.Response;
 
-public class HTTPServer {
+public class HttpServer {
 	
 	public static final Logger LOGGER = Logger.getLogger("HTTPServer");
 	
@@ -30,7 +30,7 @@ public class HTTPServer {
 	 * 
 	 * @param port the port to run on
 	 */
-	public HTTPServer(int port) {
+	public HttpServer(int port) {
 		this.port = port;
 	}
 	
@@ -42,7 +42,7 @@ public class HTTPServer {
 	 * @return a reference to this, so the API can be used fluently
 	 * @see {@link Route}
 	 */
-	public HTTPServer route(String uri, Route route) {
+	public HttpServer route(String uri, Route route) {
 		Objects.requireNonNull(uri, "uri is missing");
 		Objects.requireNonNull(route, "route is missing");
 		routes.put(uri.toLowerCase(), route);
@@ -55,7 +55,7 @@ public class HTTPServer {
 	 * @param parseCookies whether to parse cookies
 	 * @return a reference to this, so the API can be used fluently
 	 */
-	public HTTPServer parseCookies(boolean parseCookies) {
+	public HttpServer parseCookies(boolean parseCookies) {
 		this.parseCookies = parseCookies;
 		return this;
 	}
@@ -66,7 +66,7 @@ public class HTTPServer {
 	 * @return a reference to this, so the API can be used fluently
 	 * @throws IOException if an error occurs opening the socket server
 	 */
-	public HTTPServer start() throws IOException {
+	public HttpServer start() throws IOException {
 		this.clientHandler = new ClientHandler();
 		
 		this.socket = new ServerSocket();

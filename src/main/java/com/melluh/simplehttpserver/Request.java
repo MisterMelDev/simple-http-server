@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.melluh.simplehttpserver.ServerClient.ParseException;
-import com.melluh.simplehttpserver.protocol.HTTPHeader;
+import com.melluh.simplehttpserver.protocol.HttpHeader;
 import com.melluh.simplehttpserver.protocol.Method;
 import com.melluh.simplehttpserver.protocol.Status;
 
@@ -14,7 +14,7 @@ public class Request {
 
 	private static final int MAX_URI_LENGTH = 2048;
 	
-	private HTTPServer server;
+	private HttpServer server;
 	
 	private Method method;
 	private String location;
@@ -26,7 +26,7 @@ public class Request {
 	
 	private byte[] body;
 	
-	protected Request(HTTPServer server, Method method, String uri, String protocolVersion) throws ParseException {
+	protected Request(HttpServer server, Method method, String uri, String protocolVersion) throws ParseException {
 		this.server = server;
 		this.method = method;
 		this.protocolVersion = protocolVersion;
@@ -42,11 +42,11 @@ public class Request {
 		
 		int paramsIndex = uri.indexOf('?');
 		if(paramsIndex < 0) {
-			this.location = HTTPUtils.decodePercent(uri);
+			this.location = HttpUtils.decodePercent(uri);
 			return;
 		}
 		
-		this.location = HTTPUtils.decodePercent(uri.substring(0, paramsIndex));
+		this.location = HttpUtils.decodePercent(uri.substring(0, paramsIndex));
 		
 		String[] params = uri.substring(paramsIndex + 1).split("&");
 		for(String param : params) {
@@ -56,14 +56,14 @@ public class Request {
 			
 			String key = param.substring(0, equalsIndex);
 			String value = param.substring(equalsIndex + 1);
-			uriParams.put(HTTPUtils.decodePercent(key.toLowerCase()), HTTPUtils.decodePercent(value));
+			uriParams.put(HttpUtils.decodePercent(key.toLowerCase()), HttpUtils.decodePercent(value));
 		}
 	}
 	
 	protected void addHeader(String key, String value) {
 		headers.put(key.toLowerCase(), value);
 		
-		if(key.equalsIgnoreCase(HTTPHeader.COOKIE) && server.isParseCookies()) {
+		if(key.equalsIgnoreCase(HttpHeader.COOKIE) && server.isParseCookies()) {
 			this.parseCookieHeader(value);
 		}
 	}
@@ -144,7 +144,7 @@ public class Request {
 	 * 
 	 * @param name name of the cookie
 	 * @return value of the cookie, or null if it isn't present
-	 * @see {@link HTTPServer#isParseCookies()}
+	 * @see {@link HttpServer#isParseCookies()}
 	 */
 	public String getCookie(String name) {
 		return cookies.get(name);
@@ -181,7 +181,7 @@ public class Request {
 	 * 
 	 * @param name name of the cookie
 	 * @return whether this request contains it
-	 * @see {@link HTTPServer#isParseCookies()}
+	 * @see {@link HttpServer#isParseCookies()}
 	 */
 	public boolean hasCookie(String name) {
 		return cookies.containsKey(name);
@@ -215,7 +215,7 @@ public class Request {
 	 * <b>This will only work if cookie parsing is enabled.</b>
 	 * 
 	 * @return an immutable set of cookie names
-	 * @see {@link HTTPServer#isParseCookies()}
+	 * @see {@link HttpServer#isParseCookies()}
 	 */
 	public Set<String> getCookies() {
 		return Collections.unmodifiableSet(cookies.keySet());

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.melluh.simplehttpserver.HTTPUtils;
+import com.melluh.simplehttpserver.HttpUtils;
 
 public class StreamResponseBody implements ResponseBody {
 
@@ -24,7 +24,7 @@ public class StreamResponseBody implements ResponseBody {
 			try {
 				out.write(buffer, 0, len);
 			} catch (IOException ex) {
-				HTTPUtils.close(in);
+				HttpUtils.close(in);
 				break;
 			}
 		}
@@ -32,7 +32,7 @@ public class StreamResponseBody implements ResponseBody {
 	
 	@Override
 	public void close() throws IOException {
-		HTTPUtils.close(in);
+		HttpUtils.close(in);
 	}
 
 	@Override

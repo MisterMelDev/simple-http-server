@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.melluh.simplehttpserver.HTTPUtils;
+import com.melluh.simplehttpserver.HttpUtils;
 import com.melluh.simplehttpserver.Request;
 
 /**
@@ -169,7 +169,7 @@ public class Cookie {
 		List<String> result = new ArrayList<>();
 		
 		if(expires != null)
-			result.add("Expires=" + HTTPUtils.getFormattedTime(expires));
+			result.add("Expires=" + HttpUtils.getFormattedTime(expires));
 		
 		if(maxAge != null)
 			result.add("Max-Age=" + maxAge);

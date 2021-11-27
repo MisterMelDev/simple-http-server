@@ -8,10 +8,10 @@ import java.util.logging.Level;
 
 public class SocketListener implements Runnable {
 
-	private HTTPServer server;
+	private HttpServer server;
 	private ServerSocket socket;
 	
-	public SocketListener(HTTPServer server, ServerSocket socket) {
+	public SocketListener(HttpServer server, ServerSocket socket) {
 		this.server = server;
 		this.socket = socket;
 	}
@@ -24,7 +24,7 @@ public class SocketListener implements Runnable {
 				InputStream in = clientSocket.getInputStream();
 				server.getClientHandler().acceptClient(new ServerClient(server, clientSocket, in));
 			} catch (IOException ex) {
-				HTTPServer.LOGGER.log(Level.SEVERE, "Error handling client connection", ex);
+				HttpServer.LOGGER.log(Level.SEVERE, "Error handling client connection", ex);
 			}
 		}
 	}
