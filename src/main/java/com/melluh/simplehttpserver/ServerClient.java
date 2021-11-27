@@ -11,6 +11,7 @@ import java.util.logging.Level;
 
 import com.melluh.simplehttpserver.protocol.HTTPHeader;
 import com.melluh.simplehttpserver.protocol.Method;
+import com.melluh.simplehttpserver.protocol.MimeType;
 import com.melluh.simplehttpserver.protocol.Status;
 import com.melluh.simplehttpserver.response.Response;
 
@@ -56,19 +57,19 @@ public class ServerClient implements Runnable {
 			// Read status line
 			String statusLine = reader.readLine();
 			if(statusLine == null) {
-				this.sendResponse(new Response(Status.BAD_REQUEST).body("Missing status line"));
+				this.sendResponse(new Response(Status.BAD_REQUEST).contentType(MimeType.PLAIN_TEXT).body("Missing status line"));
 				return;
 			}
 			
 			String[] statusParams = statusLine.split(" ");
 			if(statusParams.length != 3) {
-				this.sendResponse(new Response(Status.BAD_REQUEST).body("Malformed status line"));
+				this.sendResponse(new Response(Status.BAD_REQUEST).contentType(MimeType.PLAIN_TEXT).body("Malformed status line"));
 				return;
 			}
 			
 			Method method = Method.getMethod(statusParams[0]);
 			if(method == null) {
-				this.sendResponse(new Response(Status.METHOD_NOT_ALLOWED).body("Method not supported by server implementation"));
+				this.sendResponse(new Response(Status.METHOD_NOT_ALLOWED).contentType(MimeType.PLAIN_TEXT).body("Method not supported by server implementation"));
 				return;
 			}
 			
@@ -92,7 +93,7 @@ public class ServerClient implements Runnable {
 				
 				int colonIndex = headerLine.indexOf(':');
 				if(colonIndex < 0) {
-					this.sendResponse(new Response(Status.BAD_REQUEST).body("Malformed headers"));
+					this.sendResponse(new Response(Status.BAD_REQUEST).contentType(MimeType.PLAIN_TEXT).body("Malformed headers"));
 					return;
 				}
 				
@@ -103,7 +104,24 @@ public class ServerClient implements Runnable {
 			
 			reader.close();
 			
-			// TODO: read body
+			// read body, if it's present
+			if(request.hasHeader(HTTPHeader.CONTENT_LENGTH)) {
+				int bodyLength = HTTPUtils.safeParseInt(request.getHeader(HTTPHeader.CONTENT_LENGTH));
+				if(bodyLength > 0) {
+					byte[] body = new byte[bodyLength];
+					int read, totalRead = 0;
+					while(bodyLength - totalRead > 0 && (read = in.read(body, totalRead, bodyLength - totalRead)) > -1) {
+						totalRead += read;
+					}
+					
+					if(totalRead < bodyLength) {
+						this.sendResponse(new Response(Status.BAD_REQUEST).contentType(MimeType.PLAIN_TEXT).body("Unable to read complete body"));
+						return;
+					}
+					
+					request.setBody(body);
+				}
+			}
 			
 			this.sendResponse(server.handleRequest(request));
 		} catch (IOException ex) {

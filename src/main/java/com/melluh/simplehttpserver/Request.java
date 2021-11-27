@@ -24,6 +24,8 @@ public class Request {
 	private Map<String, String> uriParams = new HashMap<>();
 	private Map<String, String> cookies = new HashMap<>();
 	
+	private byte[] body;
+	
 	protected Request(HTTPServer server, Method method, String uri, String protocolVersion) throws ParseException {
 		this.server = server;
 		this.method = method;
@@ -74,6 +76,10 @@ public class Request {
 			
 			cookies.put(part.substring(0, equalsIndex), part.substring(equalsIndex + 1));
 		}
+	}
+	
+	protected void setBody(byte[] body) {
+		this.body = body;
 	}
 	
 	/**
@@ -213,6 +219,25 @@ public class Request {
 	 */
 	public Set<String> getCookies() {
 		return Collections.unmodifiableSet(cookies.keySet());
+	}
+	
+	/**
+	 * Gets this request's body. May be null.
+	 * 
+	 * @return the body, may be null
+	 */
+	public byte[] getBody() {
+		return body;
+	}
+	
+	/**
+	 * Gets this request's body as a string.
+	 * May be null.
+	 * 
+	 * @return the body, may be null
+	 */
+	public String getBodyAsString() {
+		return body != null ? new String(body) : null;
 	}
 	
 }

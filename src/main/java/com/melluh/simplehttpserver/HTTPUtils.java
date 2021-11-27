@@ -109,4 +109,12 @@ public class HTTPUtils {
 		return Integer.toHexString((file.getAbsolutePath() + file.lastModified() + file.length()).hashCode());
 	}
 	
+	public static int safeParseInt(String str) {
+		try {
+			return Integer.parseInt(str);
+		} catch (NumberFormatException ignored) {
+			return -1;
+		}
+	}
+	
 }
