@@ -1,5 +1,6 @@
 plugins {
 	id 'java'
+	id 'maven-publish'
 }
 
 group = 'com.melluh'
@@ -7,3 +8,13 @@ version = '1.0.0'
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			groupId = 'com.melluh'
+			artifactId = 'simple-http-server'
+			from components.java
+		}
+	}
+}
