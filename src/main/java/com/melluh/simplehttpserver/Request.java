@@ -24,7 +24,7 @@ public class Request {
 	private String protocolVersion;
 	
 	private Map<String, String> headers = new HashMap<>();
-	private Map<String, String> uriParams = new HashMap<>();
+	private Map<String, String> queryParams = new HashMap<>();
 	private Map<String, String> cookies = new HashMap<>();
 	
 	private byte[] body;
@@ -59,7 +59,7 @@ public class Request {
 			
 			String key = param.substring(0, equalsIndex);
 			String value = param.substring(equalsIndex + 1);
-			uriParams.put(HttpUtils.decodePercent(key.toLowerCase()), HttpUtils.decodePercent(value));
+			queryParams.put(HttpUtils.decodePercent(key.toLowerCase()), HttpUtils.decodePercent(value));
 		}
 	}
 	
@@ -126,15 +126,15 @@ public class Request {
 	}
 	
 	/**
-	 * Returns the value for the specified URI parameter.
+	 * Returns the value for the specified query parameter.
 	 * If the parameter is not present on this request, this returns null.
 	 * The name is case-insensitive.
 	 * 
-	 * @param name name of the uri param
-	 * @return value of the uri param, or null if it isn't present
+	 * @param name name of the query param
+	 * @return value of the query param, or null if it isn't present
 	 */
-	public String getUriParam(String name) {
-		return uriParams.get(name.toLowerCase());
+	public String getQueryParam(String name) {
+		return queryParams.get(name.toLowerCase());
 	}
 	
 	/**
@@ -165,14 +165,14 @@ public class Request {
 	}
 	
 	/**
-	 * Checks if this request contains the specified uri param.
+	 * Checks if this request contains the specified query param.
 	 * The name is case-insensitive.
 	 * 
-	 * @param name name of the uri param
+	 * @param name name of the query param
 	 * @return whether this request contains it
 	 */
-	public boolean hasUriParam(String name) {
-		return uriParams.containsKey(name.toLowerCase());
+	public boolean hasQueryParam(String name) {
+		return queryParams.containsKey(name.toLowerCase());
 	}
 	
 	/**
@@ -201,13 +201,13 @@ public class Request {
 	}
 	
 	/**
-	 * Returns a set of URI params on this request.
+	 * Returns a set of query params on this request.
 	 * All names are in lowercase.
 	 * 
-	 * @return an immutable set of the uri params
+	 * @return an immutable set of the query params
 	 */
-	public Set<String> getUriParams() {
-		return Collections.unmodifiableSet(uriParams.keySet());
+	public Set<String> getQueryParams() {
+		return Collections.unmodifiableSet(queryParams.keySet());
 	}
 	
 	/**
