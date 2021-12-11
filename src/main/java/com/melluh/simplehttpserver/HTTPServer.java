@@ -3,6 +3,7 @@ package com.melluh.simplehttpserver;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.melluh.simplehttpserver.protocol.Status;
@@ -80,7 +81,14 @@ public class HttpServer {
 			return new Response(Status.NO_CONTENT);
 		}
 		
-		Response resp = requestHandler.handle(request);
+		Response resp;
+		try {
+			resp = requestHandler.handle(request);
+		} catch (Exception ex) {
+			LOGGER.log(Level.SEVERE, "Error in request handler", ex);
+			return new Response(Status.INTERNAL_SERVER_ERROR);
+		}
+		
 		if(resp == null) {
 			LOGGER.severe("Request handler returned null response");
 			return new Response(Status.INTERNAL_SERVER_ERROR);
