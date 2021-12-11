@@ -2,10 +2,10 @@ package com.melluh.simplehttpserver;
 
 import com.melluh.simplehttpserver.response.Response;
 
-public interface Route {
+public interface RequestHandler {
 
 	/**
-	 * Called to handle a request to this route.
+	 * Called to handle a request to the web server.
 	 * 
 	 * @param request the request to handle
 	 * @return a response

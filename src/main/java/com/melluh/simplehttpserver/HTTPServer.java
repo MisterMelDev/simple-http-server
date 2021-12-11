@@ -3,12 +3,8 @@ package com.melluh.simplehttpserver;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 import java.util.logging.Logger;
 
-import com.melluh.simplehttpserver.protocol.MimeType;
 import com.melluh.simplehttpserver.protocol.Status;
 import com.melluh.simplehttpserver.response.Response;
 
@@ -17,12 +13,12 @@ public class HttpServer {
 	public static final Logger LOGGER = Logger.getLogger("HTTPServer");
 	
 	private int port;
-	private Map<String, Route> routes = new HashMap<>();
+	private boolean parseCookies = true;
 	
 	private ClientHandler clientHandler;
-	private ServerSocket socket;
+	private RequestHandler requestHandler;
 	
-	private boolean parseCookies = true;
+	private ServerSocket socket;
 	
 	/**
 	 * Creates a new HTTP server, running on the
@@ -35,21 +31,6 @@ public class HttpServer {
 	}
 	
 	/**
-	 * Adds a route to the server at the specified uri.
-	 * 
-	 * @param uri the uri
-	 * @param route the route
-	 * @return a reference to this, so the API can be used fluently
-	 * @see {@link Route}
-	 */
-	public HttpServer route(String uri, Route route) {
-		Objects.requireNonNull(uri, "uri is missing");
-		Objects.requireNonNull(route, "route is missing");
-		routes.put(uri.toLowerCase(), route);
-		return this;
-	}
-	
-	/**
 	 * Enables or disables parsing the Cookie header in requests.
 	 * 
 	 * @param parseCookies whether to parse cookies
@@ -57,6 +38,19 @@ public class HttpServer {
 	 */
 	public HttpServer parseCookies(boolean parseCookies) {
 		this.parseCookies = parseCookies;
+		return this;
+	}
+	
+	/**
+	 * Adds a request handler to the server. Only a single request
+	 * handler can be used per server.
+	 * 
+	 * @param requestHandler the request handler
+	 * @return a reference to this, so the API can be used fluently
+	 * @see {@link RequestHandler}
+	 */
+	public HttpServer requestHandler(RequestHandler requestHandler) {
+		this.requestHandler = requestHandler;
 		return this;
 	}
 	
@@ -82,16 +76,13 @@ public class HttpServer {
 	}
 	
 	protected Response handleRequest(Request request) {
-		Route route = routes.get(request.getLocation());
-		if(route == null) {
-			return new Response(Status.NOT_FOUND)
-					.contentType(MimeType.PLAIN_TEXT)
-					.body("Not found");
+		if(requestHandler == null) {
+			return new Response(Status.NO_CONTENT);
 		}
 		
-		Response resp = route.handle(request);
+		Response resp = requestHandler.handle(request);
 		if(resp == null) {
-			LOGGER.severe("Route " + request.getLocation() + " returned null response");
+			LOGGER.severe("Request handler returned null response");
 			return new Response(Status.INTERNAL_SERVER_ERROR);
 		}
 		
