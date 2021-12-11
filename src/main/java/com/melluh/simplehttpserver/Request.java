@@ -10,6 +10,9 @@ import com.melluh.simplehttpserver.protocol.HttpHeader;
 import com.melluh.simplehttpserver.protocol.Method;
 import com.melluh.simplehttpserver.protocol.Status;
 
+/**
+ * A request from a HTTP client.
+ */
 public class Request {
 
 	private static final int MAX_URI_LENGTH = 2048;

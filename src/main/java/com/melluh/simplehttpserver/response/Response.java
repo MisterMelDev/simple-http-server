@@ -9,8 +9,11 @@ import java.util.Set;
 import com.melluh.simplehttpserver.protocol.MimeType;
 import com.melluh.simplehttpserver.protocol.Status;
 
+/**
+ * A response which will be sent to a HTTP client.
+ */
 public class Response {
-
+	
 	private Status status;
 	private Map<String, String> headers = new HashMap<>();
 	private Set<Cookie> cookies = new HashSet<>();

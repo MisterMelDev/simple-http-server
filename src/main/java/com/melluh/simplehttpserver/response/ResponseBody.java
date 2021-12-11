@@ -8,8 +8,26 @@ import java.io.OutputStream;
  */
 public interface ResponseBody {
 
+	/**
+	 * Writes the body to an output stream.
+	 * 
+	 * @param out the output stream
+	 * @throws IOException if an I/O error occurs
+	 */
 	public void write(OutputStream out) throws IOException;
+	
+	/**
+	 * Closes any resources this response body is using.
+	 * 
+	 * @throws IOException if an I/O error occurs
+	 */
 	public void close() throws IOException;
+	
+	/**
+	 * Returns the length of this response.
+	 * 
+	 * @return the length in bytes
+	 */
 	public long getLength();
 	
 }

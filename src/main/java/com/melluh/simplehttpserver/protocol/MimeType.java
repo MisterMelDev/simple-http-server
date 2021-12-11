@@ -3,6 +3,12 @@ package com.melluh.simplehttpserver.protocol;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.melluh.simplehttpserver.response.Response;
+
+/**
+ * Contains some commonly used MIME types, to be used in the <code>Content-Type</code> header of a response.
+ * @see {@link Response#contentType(String)}
+ */
 public class MimeType {
 
 	private MimeType() {}
@@ -40,6 +46,13 @@ public class MimeType {
 		FILE_EXTENSIONS.put("mp4", VIDEO_MP4);
 	}
 	
+	/**
+	 * Returns the MIME type corresponding to a file extension.
+	 * If the extension is unknown, <code>application/octet-stream</code> is returned.
+	 * 
+	 * @param fileName complete file name
+	 * @return MIME type corresponding to the file extension
+	 */
 	public static String getMimeType(String fileName) {
 		int dotIndex = fileName.indexOf('.');
 		if(dotIndex < 0)

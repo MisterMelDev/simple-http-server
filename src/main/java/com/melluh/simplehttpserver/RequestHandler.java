@@ -2,6 +2,10 @@ package com.melluh.simplehttpserver;
 
 import com.melluh.simplehttpserver.response.Response;
 
+/**
+ * Called to get responses for client requests.
+ * All requests for a server are sent to a single request handler.
+ */
 public interface RequestHandler {
 
 	/**
