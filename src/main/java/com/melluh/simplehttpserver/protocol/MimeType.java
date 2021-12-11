@@ -23,6 +23,7 @@ public class MimeType {
 	public static String IMAGE_GIF = "image/gif";
 	public static String IMAGE_JPEG = "image/jpeg";
 	public static String IMAGE_WEBP = "image/webp";
+	public static String IMAGE_SVG = "image/svg+xml";
 	public static String AUDIO_WAV = "audio/wav";
 	public static String AUDIO_WEBM = "audio/webm";
 	public static String VIDEO_WEBM = "video/webm";
@@ -41,6 +42,7 @@ public class MimeType {
 		FILE_EXTENSIONS.put("jpg", IMAGE_JPEG);
 		FILE_EXTENSIONS.put("jpeg", IMAGE_JPEG);
 		FILE_EXTENSIONS.put("webp", IMAGE_WEBP);
+		FILE_EXTENSIONS.put("svg", IMAGE_SVG);
 		FILE_EXTENSIONS.put("wav", AUDIO_WAV);
 		FILE_EXTENSIONS.put("webm", VIDEO_WEBM);
 		FILE_EXTENSIONS.put("mp4", VIDEO_MP4);
@@ -54,7 +56,7 @@ public class MimeType {
 	 * @return MIME type corresponding to the file extension
 	 */
 	public static String getMimeType(String fileName) {
-		int dotIndex = fileName.indexOf('.');
+		int dotIndex = fileName.lastIndexOf('.');
 		if(dotIndex < 0)
 			return OCTET_STREAM;
 		String extension = fileName.substring(dotIndex + 1);
