@@ -3,6 +3,8 @@ package com.melluh.simplehttpserver;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,12 +15,12 @@ public class HttpServer {
 	
 	public static final Logger LOGGER = Logger.getLogger("HTTPServer");
 	
-	private int port;
+	private final int port;
 	private boolean parseCookies = true;
-	
+
+	private final List<RequestHandler> requestHandlers = new ArrayList<>();
 	private ClientHandler clientHandler;
-	private RequestHandler requestHandler;
-	
+
 	private ServerSocket socket;
 	
 	/**
@@ -39,19 +41,6 @@ public class HttpServer {
 	 */
 	public HttpServer parseCookies(boolean parseCookies) {
 		this.parseCookies = parseCookies;
-		return this;
-	}
-	
-	/**
-	 * Adds a request handler to the server. Only a single request
-	 * handler can be used per server.
-	 * 
-	 * @param requestHandler the request handler
-	 * @return a reference to this, so the API can be used fluently
-	 * @see {@link RequestHandler}
-	 */
-	public HttpServer requestHandler(RequestHandler requestHandler) {
-		this.requestHandler = requestHandler;
 		return this;
 	}
 	
@@ -77,21 +66,20 @@ public class HttpServer {
 	}
 	
 	protected Response handleRequest(Request request) {
-		if(requestHandler == null) {
-			return new Response(Status.NO_CONTENT);
-		}
-		
-		Response resp;
+		Response resp = null;
 		try {
-			resp = requestHandler.handle(request);
+			for(RequestHandler handler : requestHandlers) {
+				resp = handler.serve(request);
+				if(resp != null)
+					break;
+			}
 		} catch (Exception ex) {
 			LOGGER.log(Level.SEVERE, "Error in request handler", ex);
 			return new Response(Status.INTERNAL_SERVER_ERROR);
 		}
 		
 		if(resp == null) {
-			LOGGER.severe("Request handler returned null response");
-			return new Response(Status.INTERNAL_SERVER_ERROR);
+			resp = new Response(Status.NOT_FOUND);
 		}
 		
 		return resp;
@@ -124,5 +112,11 @@ public class HttpServer {
 	public boolean isParseCookies() {
 		return parseCookies;
 	}
+
+	public HttpServer use(RequestHandler handler) {
+		requestHandlers.add(0, handler);
+		return this;
+	}
+
 	
 }

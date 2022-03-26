@@ -15,6 +15,6 @@ public interface RequestHandler {
 	 * @return a response
 	 * @see {@link Request}, {@link Response}
 	 */
-	public Response handle(Request request);
+	Response serve(Request request);
 	
 }
