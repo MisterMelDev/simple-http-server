@@ -10,8 +10,8 @@ public enum Status {
 	 * This interim response indicates that the client should continue the request or ignore the response
 	 * if the request is already finished.
 	 */
-	
 	CONTINUE(100, "Continue"),
+
 	/**
 	 * This code is sent in response to an <code>Upgrade</code> header from the client and indicates the
 	 * protocol the server is switching to.
@@ -315,10 +315,10 @@ public enum Status {
 	 */
 	NETWORK_AUTHENTICATION_REQUIRED(511, "Network Authentication Required");
 	
-	private int code;
-	private String description;
+	private final int code;
+	private final String description;
 	
-	private Status(int code, String description) {
+	Status(int code, String description) {
 		this.code = code;
 		this.description = description;
 	}

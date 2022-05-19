@@ -17,15 +17,15 @@ public class Request {
 
 	private static final int MAX_URI_LENGTH = 2048;
 	
-	private HttpServer server;
+	private final HttpServer server;
 	
 	private Method method;
 	private String location;
 	private String protocolVersion;
 	
-	private Map<String, String> headers = new HashMap<>();
-	private Map<String, String> queryParams = new HashMap<>();
-	private Map<String, String> cookies = new HashMap<>();
+	private final Map<String, String> headers = new HashMap<>();
+	private final Map<String, String> queryParams = new HashMap<>();
+	private final Map<String, String> cookies = new HashMap<>();
 	
 	private byte[] body;
 	
@@ -89,7 +89,6 @@ public class Request {
 	 * Returns this request's method.
 	 * 
 	 * @return the method
-	 * @see {@link Method}
 	 */
 	public Method getMethod() {
 		return method;
@@ -147,7 +146,7 @@ public class Request {
 	 * 
 	 * @param name name of the cookie
 	 * @return value of the cookie, or null if it isn't present
-	 * @see {@link HttpServer#isParseCookies()}
+	 * @see HttpServer#isParseCookies()
 	 */
 	public String getCookie(String name) {
 		return cookies.get(name);
@@ -184,7 +183,7 @@ public class Request {
 	 * 
 	 * @param name name of the cookie
 	 * @return whether this request contains it
-	 * @see {@link HttpServer#isParseCookies()}
+	 * @see HttpServer#isParseCookies()
 	 */
 	public boolean hasCookie(String name) {
 		return cookies.containsKey(name);
@@ -218,7 +217,7 @@ public class Request {
 	 * <b>This will only work if cookie parsing is enabled.</b>
 	 * 
 	 * @return an immutable set of cookie names
-	 * @see {@link HttpServer#isParseCookies()}
+	 * @see HttpServer#isParseCookies()
 	 */
 	public Set<String> getCookies() {
 		return Collections.unmodifiableSet(cookies.keySet());

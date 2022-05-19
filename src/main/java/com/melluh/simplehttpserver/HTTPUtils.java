@@ -4,6 +4,7 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
@@ -22,7 +23,11 @@ public class HttpUtils {
 	private HttpUtils() {}
 	
 	public static String decodePercent(String str) {
-		return URLDecoder.decode(str, StandardCharsets.UTF_8);
+		try {
+			return URLDecoder.decode(str, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException("UTF-8 not supported on system");
+		}
 	}
 	
 	private static final DateTimeFormatter HTTP_TIME_FORMATTER = DateTimeFormatter

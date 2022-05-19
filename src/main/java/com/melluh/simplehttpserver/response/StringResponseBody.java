@@ -11,7 +11,7 @@ import java.util.Objects;
  */
 public class StringResponseBody implements ResponseBody {
 
-	private byte[] body;
+	private final byte[] body;
 	
 	/**
 	 * Creates a new string response body, containing the specified bytes.
@@ -40,7 +40,6 @@ public class StringResponseBody implements ResponseBody {
 	 *
 	 * @param body the body
 	 * @param charset the charset used to convert to bytes
-	 * @see {@link Charset}
 	 */
 	public StringResponseBody(String body, Charset charset) {
 		Objects.requireNonNull(body, "body is missing");
@@ -54,7 +53,7 @@ public class StringResponseBody implements ResponseBody {
 	}
 	
 	@Override
-	public void close() throws IOException {}
+	public void close() {}
 	
 	@Override
 	public long getLength() {

@@ -13,11 +13,11 @@ import com.melluh.simplehttpserver.HttpUtils;
  */
 public class StreamResponseBody implements ResponseBody {
 
-	private static int DEFAULT_BUFFER_SIZE = 32 * 1024; // 32kb
+	private static final int DEFAULT_BUFFER_SIZE = 32 * 1024; // 32kb
 	
-	private InputStream in;
-	private long length;
-	private int bufferSize;
+	private final InputStream in;
+	private final long length;
+	private final int bufferSize;
 	
 	/**
 	 * Creates a new stream response body, with a 32KB buffer.
@@ -63,7 +63,7 @@ public class StreamResponseBody implements ResponseBody {
 	}
 	
 	@Override
-	public void close() throws IOException {
+	public void close() {
 		HttpUtils.close(in);
 	}
 

@@ -9,12 +9,12 @@ import com.melluh.simplehttpserver.Request;
 
 /**
  * Represents a cookie that will be sent using the <code>Set-Cookie</code> header.
- * @see {@link Request#getCookie(String)}
+ * @see Request#getCookie(String)
  */
 public class Cookie {
 
-	private String name;
-	private String value;
+	private final String name;
+	private final String value;
 	
 	private Long expires;
 	private Long maxAge;
@@ -138,7 +138,7 @@ public class Cookie {
 	 * 
 	 * @param sameSite the same site mode
 	 * @return a reference to this, so the API can be used fluently
-	 * @see {@link SameSiteMode}
+	 * @see SameSiteMode
 	 */
 	public Cookie sameSite(SameSiteMode sameSite) {
 		Objects.requireNonNull(sameSite, "sameSite is missing");
@@ -192,7 +192,7 @@ public class Cookie {
 		return result;
 	}
 	
-	public static enum SameSiteMode {
+	public enum SameSiteMode {
 		
 		/**
 		 * The browser sends the cookie only for same-site requests, that is,
@@ -215,13 +215,13 @@ public class Cookie {
 		 * The browser sends the cookie with both cross-site and same-site
 		 * requests. The <code>Secure</code> attribute must also be set when
 		 * setting this value.
-		 * @see {@link Cookie#secure(boolean)}
+		 * @see Cookie#secure(boolean)
 		 */
 		NONE("None");
 		
-		private String protocolName;
+		private final String protocolName;
 		
-		private SameSiteMode(String protocolName) {
+		SameSiteMode(String protocolName) {
 			this.protocolName = protocolName;
 		}
 		

@@ -8,14 +8,14 @@ import java.util.concurrent.Executors;
 
 public class ClientHandler {
 	
-	private List<ServerClient> clients = Collections.synchronizedList(new ArrayList<>());
-	private ExecutorService executor = Executors.newCachedThreadPool();
+	private final List<ServerClient> clients = Collections.synchronizedList(new ArrayList<>());
+	private final ExecutorService executor = Executors.newCachedThreadPool();
 	
 	/**
 	 * Returns a list of all server clients with an active connection.
 	 * 
 	 * @return an immutable list of active clients
-	 * @see {@link ServerClient}
+	 * @see ServerClient
 	 */
 	public List<ServerClient> getClients() {
 		return Collections.unmodifiableList(clients);

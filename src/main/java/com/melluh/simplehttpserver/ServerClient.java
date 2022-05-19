@@ -20,9 +20,9 @@ public class ServerClient implements Runnable {
 	private static final String SERVER_HEADER = "simple-http-server";
 	private static final int HEADER_BUFFER_SIZE = 8192;
 	
-	private HttpServer server;
-	private Socket socket;
-	private InputStream in;
+	private final HttpServer server;
+	private final Socket socket;
+	private final InputStream in;
 	
 	private Request request;
 	
@@ -165,7 +165,7 @@ public class ServerClient implements Runnable {
 		
 		private static final long serialVersionUID = 1L;
 		
-		private Status status;
+		private final Status status;
 		
 		public ParseException(Status status, String msg) {
 			super(msg);

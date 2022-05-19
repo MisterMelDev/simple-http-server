@@ -14,16 +14,17 @@ import com.melluh.simplehttpserver.protocol.Status;
  */
 public class Response {
 	
-	private Status status;
-	private Map<String, String> headers = new HashMap<>();
-	private Set<Cookie> cookies = new HashSet<>();
+	private final Status status;
+	private final Map<String, String> headers = new HashMap<>();
+	private final Set<Cookie> cookies = new HashSet<>();
+
 	private ResponseBody body;
 	
 	/**
 	 * Creates a new response, with the specified status.
 	 * 
 	 * @param status the response status
-	 * @see {@link Status}
+	 * @see Status
 	 */
 	public Response(Status status) {
 		this.status = status;
@@ -63,11 +64,13 @@ public class Response {
 	}
 	
 	/**
-	 * Adds a Content-Type header to the response, overwriting the existing value if present.
+	 * Adds a <code>Content-Type</code> header to the response, overwriting the
+	 * existing value if present.
 	 * 
 	 * @param mimeType the mime type
 	 * @return a reference to this, so the API can be used fluently
-	 * @see {@link MimeType}, {@link #header(String, String)}
+	 * @see MimeType
+	 * @see #header(String, String)
 	 */
 	public Response contentType(String mimeType) {
 		Objects.requireNonNull(mimeType, "mimeType is missing");	
@@ -77,10 +80,10 @@ public class Response {
 	
 	/**
 	 * Adds a body to the response, overwriting the existing body if present.
-	 * Uses a {@link StringResponseBody} internally.
 	 * 
 	 * @param body the body
 	 * @return a reference to this, so the API can be used fluently
+	 * @see StringResponseBody
 	 */
 	public Response body(String body) {
 		this.body(new StringResponseBody(body));
@@ -92,6 +95,7 @@ public class Response {
 	 * 
 	 * @param body the body
 	 * @return a reference to this, so the API can be used fluently
+	 * @see StringResponseBody
 	 */
 	public Response body(byte[] body) {
 		this.body(new StringResponseBody(body));

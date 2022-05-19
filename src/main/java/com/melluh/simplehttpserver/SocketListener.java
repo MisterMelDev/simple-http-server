@@ -8,8 +8,8 @@ import java.util.logging.Level;
 
 public class SocketListener implements Runnable {
 
-	private HttpServer server;
-	private ServerSocket socket;
+	private final HttpServer server;
+	private final ServerSocket socket;
 	
 	public SocketListener(HttpServer server, ServerSocket socket) {
 		this.server = server;

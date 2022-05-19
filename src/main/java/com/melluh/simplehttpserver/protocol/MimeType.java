@@ -7,7 +7,7 @@ import com.melluh.simplehttpserver.response.Response;
 
 /**
  * Contains some commonly used MIME types, to be used in the <code>Content-Type</code> header of a response.
- * @see {@link Response#contentType(String)}
+ * @see Response#contentType(String)
  */
 public class MimeType {
 
@@ -29,7 +29,7 @@ public class MimeType {
 	public static String VIDEO_WEBM = "video/webm";
 	public static String VIDEO_MP4 = "video/mp4";
 	
-	private static Map<String, String> FILE_EXTENSIONS = new HashMap<>();
+	private static final Map<String, String> FILE_EXTENSIONS = new HashMap<>();
 	
 	static {
 		FILE_EXTENSIONS.put("txt", PLAIN_TEXT);

@@ -13,7 +13,8 @@ public interface RequestHandler {
 	 * 
 	 * @param request the request to handle
 	 * @return a response
-	 * @see {@link Request}, {@link Response}
+	 * @see Request
+	 * @see Response
 	 */
 	Response serve(Request request);
 	

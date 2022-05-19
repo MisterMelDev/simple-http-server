@@ -20,8 +20,6 @@ public class HttpServer {
 
 	private final List<RequestHandler> requestHandlers = new ArrayList<>();
 	private ClientHandler clientHandler;
-
-	private ServerSocket socket;
 	
 	/**
 	 * Creates a new HTTP server, running on the
@@ -53,7 +51,7 @@ public class HttpServer {
 	public HttpServer start() throws IOException {
 		this.clientHandler = new ClientHandler();
 		
-		this.socket = new ServerSocket();
+		ServerSocket socket = new ServerSocket();
 		socket.setReuseAddress(true);
 		socket.bind(new InetSocketAddress(port));
 		SocketListener socketListener = new SocketListener(this, socket);
@@ -89,7 +87,6 @@ public class HttpServer {
 	 * Returns this server's client handler.
 	 * 
 	 * @return the client handler
-	 * @see {@link ClientHandler}
 	 */
 	public ClientHandler getClientHandler() {
 		return clientHandler;

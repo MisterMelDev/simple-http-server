@@ -2,7 +2,6 @@ package com.melluh.simplehttpserver.router;
 
 import com.melluh.simplehttpserver.Request;
 import com.melluh.simplehttpserver.RequestHandler;
-import com.melluh.simplehttpserver.protocol.Status;
 import com.melluh.simplehttpserver.response.Response;
 
 import java.util.ArrayList;
