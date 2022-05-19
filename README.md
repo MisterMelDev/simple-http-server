@@ -2,7 +2,7 @@
 A super simple and lightweight HTTP server written in Java.
 
 ### Features
-- HTTP 1.1
+- HTTP/1.1
 - Supports cookies
 - File serving/streaming
   - Supports [partial content responses](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/206) (`Range` header)
@@ -13,16 +13,11 @@ A super simple and lightweight HTTP server written in Java.
 ### Basic Example
 This starts a server on port 8080, with a single route returning plain text.
 ```java
-HTTPServer server = new HTTPServer(8080)
-  .route("/test", new Route() {
-    @Override
-    public Response handle(Request request) {
-      return new Response(Status.OK)
-        .contentType(MimeType.PLAIN_TEXT)
-        .body("You requested /test! Method: " + request.getMethod());
-    }
-  })
-  .start();
-		
-System.out.println("Server listening on port " + server.getPort());
+HttpServer server = new HttpServer(8080)
+    .use(new Router()
+        .get("/hello", req -> new Response(Status.OK).body("Hello, world!"))
+    )
+    .start();
+
+System.out.println("Web server listening on port " + server.getPort());
 ```
