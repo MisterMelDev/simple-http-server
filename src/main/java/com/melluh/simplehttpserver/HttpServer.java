@@ -111,7 +111,7 @@ public class HttpServer {
 	}
 
 	public HttpServer use(RequestHandler handler) {
-		requestHandlers.add(0, handler);
+		requestHandlers.add(handler);
 		return this;
 	}
 
