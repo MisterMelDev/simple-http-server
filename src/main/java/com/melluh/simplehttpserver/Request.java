@@ -26,6 +26,7 @@ public class Request {
 	private final Map<String, String> headers = new HashMap<>();
 	private final Map<String, String> queryParams = new HashMap<>();
 	private final Map<String, String> cookies = new HashMap<>();
+	private final Map<String, Object> context = new HashMap<>();
 	
 	private byte[] body;
 	
@@ -240,6 +241,17 @@ public class Request {
 	 */
 	public String getBodyAsString() {
 		return body != null ? new String(body) : null;
+	}
+
+	public void putContext(String key, Object value) {
+		context.put(key, value);
+	}
+
+	public <T> T getContext(String key, Class<T> type) {
+		Object value = context.get(key);
+		if(value != null && !type.isAssignableFrom(value.getClass()))
+			throw new IllegalArgumentException(key + " is not of type " + type.getName());
+		return (T) value;
 	}
 	
 }
