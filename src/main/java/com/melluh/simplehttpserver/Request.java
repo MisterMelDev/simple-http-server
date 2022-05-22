@@ -18,16 +18,16 @@ public class Request {
 	private static final int MAX_URI_LENGTH = 2048;
 	
 	private final HttpServer server;
-	
-	private Method method;
+
+	private final Method method;
+	private final String protocolVersion;
 	private String location;
-	private String protocolVersion;
+	private String queryString;
 	
 	private final Map<String, String> headers = new HashMap<>();
-	private final Map<String, String> queryParams = new HashMap<>();
-	private final Map<String, String> cookies = new HashMap<>();
-	private final Map<String, Object> context = new HashMap<>();
-	
+	private Map<String, String> queryParams;
+	private Map<String, String> cookies;
+
 	private byte[] body;
 	
 	protected Request(HttpServer server, Method method, String uri, String protocolVersion) throws ParseException {
@@ -51,17 +51,7 @@ public class Request {
 		}
 		
 		this.location = HttpUtils.decodePercent(uri.substring(0, paramsIndex));
-		
-		String[] params = uri.substring(paramsIndex + 1).split("&");
-		for(String param : params) {
-			int equalsIndex = param.indexOf('=');
-			if(equalsIndex < 0)
-				continue;
-			
-			String key = param.substring(0, equalsIndex);
-			String value = param.substring(equalsIndex + 1);
-			queryParams.put(HttpUtils.decodePercent(key.toLowerCase()), HttpUtils.decodePercent(value));
-		}
+		this.queryString = uri.substring(paramsIndex + 1);
 	}
 	
 	protected void addHeader(String key, String value) {
@@ -73,12 +63,30 @@ public class Request {
 	}
 	
 	private void parseCookieHeader(String header) {
+		this.cookies = new HashMap<>();
 		for(String part : header.split("; ")) {
 			int equalsIndex = part.indexOf('=');
 			if(equalsIndex == -1)
 				break;
 			
 			cookies.put(part.substring(0, equalsIndex), part.substring(equalsIndex + 1));
+		}
+	}
+
+	private void parseQueryString() {
+		if(queryParams != null)
+			throw new IllegalStateException("Query string already parsed");
+
+		String[] params = queryString.split("&");
+		this.queryParams = new HashMap<>();
+		for(String param : params) {
+			int equalsIndex = param.indexOf('=');
+			if(equalsIndex < 0)
+				continue;
+
+			String key = param.substring(0, equalsIndex);
+			String value = param.substring(equalsIndex + 1);
+			queryParams.put(HttpUtils.decodePercent(key.toLowerCase()), HttpUtils.decodePercent(value));
 		}
 	}
 	
@@ -134,6 +142,8 @@ public class Request {
 	 * @return value of the query param, or null if it isn't present
 	 */
 	public String getQueryParam(String name) {
+		if(queryParams == null)
+			this.parseQueryString();
 		return queryParams.get(name.toLowerCase());
 	}
 	
@@ -150,7 +160,7 @@ public class Request {
 	 * @see HttpServer#isParseCookies()
 	 */
 	public String getCookie(String name) {
-		return cookies.get(name);
+		return cookies != null ? cookies.get(name) : null;
 	}
 	
 	/**
@@ -172,6 +182,8 @@ public class Request {
 	 * @return whether this request contains it
 	 */
 	public boolean hasQueryParam(String name) {
+		if(queryParams == null)
+			this.parseQueryString();
 		return queryParams.containsKey(name.toLowerCase());
 	}
 	
@@ -187,7 +199,7 @@ public class Request {
 	 * @see HttpServer#isParseCookies()
 	 */
 	public boolean hasCookie(String name) {
-		return cookies.containsKey(name);
+		return cookies != null && cookies.containsKey(name);
 	}
 	
 	/**
@@ -207,6 +219,8 @@ public class Request {
 	 * @return an immutable set of the query params
 	 */
 	public Set<String> getQueryParams() {
+		if(queryParams == null)
+			this.parseQueryString();
 		return Collections.unmodifiableSet(queryParams.keySet());
 	}
 	
@@ -221,7 +235,7 @@ public class Request {
 	 * @see HttpServer#isParseCookies()
 	 */
 	public Set<String> getCookies() {
-		return Collections.unmodifiableSet(cookies.keySet());
+		return cookies != null ? Collections.unmodifiableSet(cookies.keySet()) : Collections.emptySet();
 	}
 	
 	/**
@@ -241,17 +255,6 @@ public class Request {
 	 */
 	public String getBodyAsString() {
 		return body != null ? new String(body) : null;
-	}
-
-	public void putContext(String key, Object value) {
-		context.put(key, value);
-	}
-
-	public <T> T getContext(String key, Class<T> type) {
-		Object value = context.get(key);
-		if(value != null && !type.isAssignableFrom(value.getClass()))
-			throw new IllegalArgumentException(key + " is not of type " + type.getName());
-		return (T) value;
 	}
 	
 }

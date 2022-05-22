@@ -10,7 +10,7 @@ import com.melluh.simplehttpserver.protocol.MimeType;
 import com.melluh.simplehttpserver.protocol.Status;
 
 /**
- * A response which will be sent to a HTTP client.
+ * A response which will be sent to an HTTP client.
  */
 public class Response {
 	
