@@ -27,6 +27,7 @@ public class Request {
 	private final Map<String, String> headers = new HashMap<>();
 	private Map<String, String> queryParams;
 	private Map<String, String> cookies;
+	private Map<String, String> uriParams;
 
 	private byte[] body;
 	
@@ -92,6 +93,16 @@ public class Request {
 	
 	protected void setBody(byte[] body) {
 		this.body = body;
+	}
+
+	public void addUriParam(String key, String value) {
+		if(uriParams == null)
+			uriParams = new HashMap<>();
+		uriParams.put(key, value);
+	}
+
+	public String getUriParam(String key) {
+		return uriParams != null ? uriParams.get(key) : null;
 	}
 	
 	/**

@@ -48,8 +48,9 @@ public class Router implements RequestHandler {
     @Override
     public Response serve(Request req) {
         for(RouteFilter filter : filters) {
-            if(filter.matches(req))
-                return filter.serve(req);
+            Response resp = filter.serve(req);
+            if(resp != null)
+                return resp;
         }
 
         return null;
