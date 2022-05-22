@@ -27,7 +27,7 @@ public class RouteFilter {
         if(!method.equals("*") && !method.equals(req.getMethod().name()))
             return null;
 
-        Matcher uriMatcher = uriPattern.matcher(req.getLocation());
+        Matcher uriMatcher = uriPattern.matcher(discardTrailingSlash(req.getLocation()));
         if(!uriMatcher.matches())
             return null;
 
@@ -36,6 +36,12 @@ public class RouteFilter {
         }
 
         return route.serve(req);
+    }
+
+    private String discardTrailingSlash(String location) {
+        if(location.endsWith("/"))
+            location = location.substring(0, location.length() - 1);
+        return location;
     }
 
     // This is a mess, but it works.
