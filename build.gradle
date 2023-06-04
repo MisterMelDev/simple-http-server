@@ -10,6 +10,18 @@ sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 
 publishing {
+	repositories {
+        	maven {
+            		name = 'melluh'
+
+            		def releasesRepoUrl = 'https://repo.melluh.com/releases'
+            		def snapshotsRepoUrl = 'https://repo.melluh.com/snapshots'
+            		url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+
+            		credentials(PasswordCredentials.class)
+        	}
+    	}
+
 	publications {
 		maven(MavenPublication) {
 			groupId = 'com.melluh'
